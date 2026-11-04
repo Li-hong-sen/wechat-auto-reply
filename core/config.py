@@ -116,6 +116,7 @@ class Config:
     rules: list[Rule] = field(default_factory=list)
     fallback: Fallback = field(default_factory=Fallback)
     llm: LLMSettings = field(default_factory=LLMSettings)
+    memory: dict = field(default_factory=dict)
 
 
 _TIME_RANGE = re.compile(r"^(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})$")
@@ -240,4 +241,5 @@ def build_config(data: dict[str, Any]) -> Config:
         rules=[_parse_rule(r, i) for i, r in enumerate(data.get("rules") or [])],
         fallback=Fallback(kind=fallback_kind, text=fallback_raw.get("text", "")),
         llm=llm,
+        memory=dict(data.get("memory") or {}),
     )

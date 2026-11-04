@@ -27,3 +27,13 @@ ios/tweak/packages/
 /run-mac-bot.sh
 /run-server.sh
 .wxauto_token
+
+# Local credentials
+/core/config.yaml
+/.venv-ocr/
+
+# Local screenshot diagnostics
+/artifacts/
+
+# Personal deployment notes (account and machine-specific details)
+/本机部署说明.md

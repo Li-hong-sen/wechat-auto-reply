@@ -25,6 +25,7 @@ Apple 生态里最省事的方案。
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import os
 import re
@@ -333,7 +334,22 @@ def tick(engine: EngineClient, dry_run: bool) -> None:
     if not names:
         return
 
+    groups = json.loads(os.environ.get("WXAUTO_TEST_GROUPS", "[]"))
+    bot_name = os.environ.get("WXAUTO_BOT_NAME", "").strip()
+    private_enabled = os.environ.get("WXAUTO_PRIVATE_ENABLED", "0") == "1"
+    if (not groups or not bot_name) and not private_enabled:
+        logger.warning("未配置测试群或群昵称，本轮不读取消息")
+        return
+    normalize = lambda n: re.sub(r"[（(]\s*\d+\s*[)）]\s*$", "", n).strip()
+    allowed = {normalize(n) for n in groups}
     for name in names[:5]:
+        known_group = normalize(name) in allowed
+        has_member_count = bool(re.search(r"[（(]\s*\d+\s*[)）]\s*$", name))
+        is_group = known_group or has_member_count
+        if is_group and not known_group:
+            continue
+        if not is_group and not private_enabled:
+            continue
         text = run_applescript(_OPEN_AND_READ, name)
         if text.startswith("ERR:") or not text:
             logger.info("「%s」读取失败：%s", name, text[4:] or "空内容")
@@ -341,12 +357,11 @@ def tick(engine: EngineClient, dry_run: bool) -> None:
 
         logger.info("「%s」最后一条: %s", name, text)
 
-        is_group = bool(re.search(r"\(\d+\)$", name))
         decision = engine.decide(
-            chat_name=re.sub(r"\(\d+\)$", "", name),
+            chat_name=normalize(name),
             text=text,
             is_group=is_group,
-            mentioned_me="@" in text,
+            mentioned_me=is_group and bool(re.search(r"[@＠]" + re.escape(bot_name) + r"(?=\s|$)", text)),
         )
 
         if not decision or not decision["should_reply"]:

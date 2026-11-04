@@ -110,7 +110,7 @@ def test_request_shape_matches_openai_spec(server):
     assert sent["body"]["stream"] is False
     # 第一条必须是 system，人设就装在这里
     assert sent["body"]["messages"][0]["role"] == "system"
-    assert "你就是我" in sent["body"]["messages"][0]["content"]
+    assert "虚构角色人设" in sent["body"]["messages"][0]["content"]
     assert sent["body"]["messages"][-1]["role"] == "user"
 
 

@@ -578,7 +578,7 @@ def test_system_prompt_contains_persona_and_rules():
     assert "30 个字以内" in prompt        # 长度限制
     assert "转账" in prompt               # 内置硬性边界
     assert "在，怎么了" in prompt          # 示范语气
-    assert "不要自称 AI" in prompt
+    assert "如实说明是 AI 角色" in prompt
 
 
 def test_conversation_memory_keeps_context():

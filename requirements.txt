@@ -1,5 +1,7 @@
 # 核心引擎
 PyYAML>=6.0
+# 持久聊天记忆的本地 token 计数
+tokenizers>=0.21
 
 # HTTP 服务（server/app.py）
 fastapi>=0.110

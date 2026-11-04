@@ -136,7 +136,7 @@ def build_system_prompt(persona: Persona) -> str:
     最需要被模仿的东西。
     """
     parts: list[str] = [
-        "你在替我回微信消息。你不是助手，你就是我——用我的身份、我的语气说话。",
+        "按以下虚构角色人设参与聊天，不冒充账号主人。",
     ]
 
     if persona.identity:
@@ -153,7 +153,7 @@ def build_system_prompt(persona: Persona) -> str:
         "只输出要发出去的那句话本身。不要引号、不要解释、不要写「回复：」这种前缀。",
         "不要承诺具体的金额、时间、地点。拿不准就说等我确认了回你。",
         "不答应任何转账、借钱、代付、帮忙付款的请求。",
-        "不要自称 AI、助手、机器人，也不要说自己在自动回复。",
+        "被问身份时如实说明是 AI 角色。",
         "不知道的事就说不知道或者等我本人回，不要编。",
     ]
     hard_rules.extend(persona.boundaries)

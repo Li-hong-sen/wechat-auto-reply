@@ -55,6 +55,9 @@ class IncomingMessage:
 
     timestamp: float = field(default_factory=time.time)
 
+    image_paths: list[str] = field(default_factory=list)
+    """本地已验证图片附件；由模型客户端直接编码，正文不塞 base64。"""
+
     def __post_init__(self) -> None:
         self.text = (self.text or "").strip()
         if not self.sender_name:
